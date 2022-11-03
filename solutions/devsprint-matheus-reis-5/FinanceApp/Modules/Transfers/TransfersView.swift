@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 protocol TransferViewDelegate: AnyObject {
-
     func didPressChooseContactButton()
     func didPressTransferButton(with amount: String)
 }
@@ -44,7 +43,6 @@ class TransfersView: UIView {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Choose contact", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
-        button.addTarget(self, action: #selector(chooseContact), for: .touchUpInside)
         return button
     }()
 
@@ -56,7 +54,6 @@ class TransfersView: UIView {
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 14
-        button.addTarget(self, action: #selector(transfer), for: .touchUpInside)
         return button
     }()
 

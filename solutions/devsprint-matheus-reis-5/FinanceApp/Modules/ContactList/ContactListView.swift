@@ -9,8 +9,7 @@ import Foundation
 import UIKit
 
 protocol ContactListViewDelegate: AnyObject {
-
-    func didSelectContact()
+    func didSelectContact(with: Contact)
 }
 
 class ContactListView: UIView {
@@ -88,7 +87,12 @@ extension ContactListView: UITableViewDelegate {
 
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
-        delegate?.didSelectContact()
+        
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ContactCellView else {
+            return
+        }
+        
+        delegate?.didSelectContact(with: Contact(name: cell.contactNameLabel.text ?? "", phone: cell.contactPhoneLabel.text ?? ""))
     }
 }

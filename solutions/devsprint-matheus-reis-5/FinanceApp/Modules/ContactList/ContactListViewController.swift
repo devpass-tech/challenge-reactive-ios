@@ -8,8 +8,7 @@
 import UIKit
 
 protocol ContactListViewControllerDelegate: AnyObject {
-
-    func didSelectContact()
+    func didSelectContact(with: Contact)
 }
 
 class ContactListViewController: UIViewController {
@@ -34,8 +33,8 @@ class ContactListViewController: UIViewController {
 
 extension ContactListViewController: ContactListViewDelegate {
 
-    func didSelectContact() {
+    func didSelectContact(with contact: Contact) {
 
-        delegate?.didSelectContact()
+        delegate?.didSelectContact(with: contact)
     }
 }
