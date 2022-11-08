@@ -9,15 +9,15 @@ import Foundation
 import UIKit
 
 protocol ContactListViewDelegate: AnyObject {
-
-    func didSelectContact()
+    func didSelectContact(at indexPath: IndexPath)
 }
 
-class ContactListView: UIView {
+final class ContactListView: UIView {
 
     static let cellSize = CGFloat(82)
 
     private let cellIdentifier = "ContactCellIdentifier"
+    private let viewModel = ContactListViewModel()
 
     weak var delegate: ContactListViewDelegate?
 
@@ -68,13 +68,13 @@ extension ContactListView {
 extension ContactListView: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
-        return 10
+        return viewModel.contactsCount
     }
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as! ContactCellView
+        cell.setupCell(with: viewModel.contacts(at: indexPath))
 
         return cell
     }
@@ -89,6 +89,6 @@ extension ContactListView: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        delegate?.didSelectContact()
+        delegate?.didSelectContact(at: indexPath)
     }
 }

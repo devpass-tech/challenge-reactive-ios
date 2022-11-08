@@ -8,11 +8,10 @@
 import UIKit
 
 protocol ContactListViewControllerDelegate: AnyObject {
-
     func didSelectContact()
 }
 
-class ContactListViewController: UIViewController {
+final class ContactListViewController: UIViewController {
 
     weak var delegate: ContactListViewControllerDelegate?
 
@@ -33,9 +32,7 @@ class ContactListViewController: UIViewController {
 }
 
 extension ContactListViewController: ContactListViewDelegate {
-
-    func didSelectContact() {
-
-        delegate?.didSelectContact()
+    func didSelectContact(at indexPath: IndexPath) {
+        
     }
 }
