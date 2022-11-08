@@ -21,12 +21,9 @@ class ActivityListView: UIView {
     private let cellIdentifier = "ActivityCellIdentifier"
 
     lazy var tableView: UITableView = {
-
         let tableView = UITableView(frame: .zero)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(ActivityCellView.self, forCellReuseIdentifier: self.cellIdentifier)
-        tableView.dataSource = self
-        tableView.delegate = self
         return tableView
     }()
 
@@ -36,8 +33,6 @@ class ActivityListView: UIView {
         backgroundColor = .white
         addSubviews()
         configureConstraints()
-
-        tableView.reloadData()
     }
 
     required init?(coder: NSCoder) {
