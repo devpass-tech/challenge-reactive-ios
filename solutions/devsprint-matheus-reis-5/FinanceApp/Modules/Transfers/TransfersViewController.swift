@@ -6,9 +6,14 @@
 //
 
 import UIKit
+import RxRelay
+import RxSwift
+import RxCocoa
 
 final class TransfersViewController: UIViewController {
-
+    private let selectedContact = BehaviorRelay<Contact?>(value: nil)
+    private let disposeBag = DisposeBag()
+    
     lazy var transferView: TransfersView = {
 
         let transferView = TransfersView()
@@ -18,6 +23,11 @@ final class TransfersViewController: UIViewController {
 
     override func loadView() {
         self.view = transferView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bindUi()
     }
 }
 
@@ -41,9 +51,19 @@ extension TransfersViewController: TransferViewDelegate {
 
 extension TransfersViewController: ContactListViewControllerDelegate {
     func selected(contact: Contact) {
-        print(contact)
+        didSelectContact()
+        selectedContact.accept(contact)
     }
+}
 
+private extension TransfersViewController {
+    func bindUi() {
+        selectedContact.map { contact in
+            return contact == nil ? "Choose Contact" : contact?.name
+        }.bind(to: transferView.chooseContactButton.rx.title())
+            .disposed(by: disposeBag)
+    }
+    
     func didSelectContact() {
 
         self.dismiss(animated: true)
