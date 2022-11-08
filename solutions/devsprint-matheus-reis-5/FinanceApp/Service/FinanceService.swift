@@ -6,37 +6,49 @@
 //
 
 import Foundation
+import RxSwift
+
+enum FinanceServiceError: Error {
+    case decoding
+    case emptyData
+    case request
+}
 
 class FinanceService {
 
-    func fetchHomeData(_ completion: @escaping (HomeData?) -> Void) {
+    func fetchHomeData() -> Observable<HomeData> {
 
         let url = URL(string: "https://raw.githubusercontent.com/devpass-tech/challenge-finance-app/main/api/home_endpoint.json")!
 
-        let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
+        
+        return Observable.create { observer in
+            let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
 
-            guard error == nil else {
-                completion(nil)
-                return
+                guard error == nil else {
+                    observer.onError(FinanceServiceError.request)
+                    return
+                }
+
+                guard let data = data else {
+                    observer.onError(FinanceServiceError.emptyData)
+                    return
+                }
+
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let homeData = try decoder.decode(HomeData.self, from: data)
+                    observer.onNext(homeData)
+                } catch {
+                    print(error)
+                    observer.onError(FinanceServiceError.request)
+                }
             }
 
-            guard let data = data else {
-                completion(nil)
-                return
-            }
-
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let homeData = try decoder.decode(HomeData.self, from: data)
-                completion(homeData)
-            } catch {
-                print(error)
-                completion(nil)
-            }
+            dataTask.resume()
+            
+            return Disposables.create()
         }
-
-        dataTask.resume()
     }
 
     func fetchActivityDetails(_ completion: @escaping (ActivityDetails?) -> Void) {

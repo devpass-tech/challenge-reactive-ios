@@ -135,4 +135,11 @@ class ActivityDetailsView: UIView {
 
         delegate?.didPressReportButton()
     }
+    
+    func configureUI(data: Activity) {
+        activityNameLabel.text = data.name
+        categoryLabel.text = data.name
+        priceLabel.text = "R$\(data.price)"
+        timeLabel.text = data.time
+    }
 }
