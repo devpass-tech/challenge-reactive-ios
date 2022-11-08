@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TransfersViewController: UIViewController {
+final class TransfersViewController: UIViewController {
 
     lazy var transferView: TransfersView = {
 
@@ -40,6 +40,9 @@ extension TransfersViewController: TransferViewDelegate {
 }
 
 extension TransfersViewController: ContactListViewControllerDelegate {
+    func selected(contact: Contact) {
+        print(contact)
+    }
 
     func didSelectContact() {
 

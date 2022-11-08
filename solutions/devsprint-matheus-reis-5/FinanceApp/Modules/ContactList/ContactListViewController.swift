@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ContactListViewControllerDelegate: AnyObject {
-    func didSelectContact()
+    func selected(contact: Contact)
 }
 
 final class ContactListViewController: UIViewController {
@@ -32,7 +32,7 @@ final class ContactListViewController: UIViewController {
 }
 
 extension ContactListViewController: ContactListViewDelegate {
-    func didSelectContact(at indexPath: IndexPath) {
-        
+    func didSelect(contact: Contact) {
+        delegate?.selected(contact: contact)
     }
 }
