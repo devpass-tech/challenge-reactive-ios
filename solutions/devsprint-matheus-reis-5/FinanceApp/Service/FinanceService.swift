@@ -5,38 +5,79 @@
 //  Created by Rodrigo Borges on 30/12/21.
 //
 
+import RxSwift
 import Foundation
+
+enum FinanceServiceError: Error {
+    case decoding
+    case emptyData
+    case request
+}
 
 class FinanceService {
 
-    func fetchHomeData(_ completion: @escaping (HomeData?) -> Void) {
-
+    func fetchHomeData() -> Observable<Result<HomeData,FinanceServiceError>> {
         let url = URL(string: "https://raw.githubusercontent.com/devpass-tech/challenge-finance-app/main/api/home_endpoint.json")!
-
-        let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
-
-            guard error == nil else {
-                completion(nil)
-                return
+        
+        return Observable.create { observer in
+            let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
+                
+                guard error == nil else {
+                    observer.onNext(.failure(.request))
+                    return
+                }
+                
+                guard let data = data else {
+                    observer.onNext(.failure(.emptyData))
+                    return
+                }
+                
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let homeData = try decoder.decode(HomeData.self, from: data)
+                    observer.onNext(.success(homeData))
+                } catch {
+                    observer.onNext(.failure(.decoding))
+                }
             }
-
-            guard let data = data else {
-                completion(nil)
-                return
-            }
-
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let homeData = try decoder.decode(HomeData.self, from: data)
-                completion(homeData)
-            } catch {
-                print(error)
-                completion(nil)
-            }
+            
+            dataTask.resume()
+            
+            return Disposables.create()
         }
-
-        dataTask.resume()
+    }
+    
+    func fetchHomeData() -> Observable<HomeData> {
+        let url = URL(string: "https://raw.githubusercontent.com/devpass-tech/challenge-finance-app/main/api/home_endpoint.json")!
+        
+        return Observable.create { observer in
+            let dataTask = URLSession.shared.dataTask(with: url) { data, response, error in
+                
+                guard error == nil else {
+                    observer.onError(FinanceServiceError.request)
+                    return
+                }
+                
+                guard let data = data else {
+                    observer.onError(FinanceServiceError.emptyData)
+                    return
+                }
+                
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let homeData = try decoder.decode(HomeData.self, from: data)
+                    observer.onNext(homeData)
+                } catch {
+                    observer.onError(FinanceServiceError.decoding)
+                }
+            }
+            
+            dataTask.resume()
+            
+            return Disposables.create()
+        }
     }
 
     func fetchActivityDetails(_ completion: @escaping (ActivityDetails?) -> Void) {

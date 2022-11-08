@@ -41,8 +41,7 @@ class HomeViewController: UIViewController {
     }
     
     private func bindObservables() {
-        activitiesObservable.asObservable()
-            .bind(to: homeView.activityListView.tableView.rx.items(cellIdentifier: "ActivityCellIdentifier", cellType: ActivityCellView.self)) { (_, item, cell) in
+        activitiesObservable.bind(to: homeView.activityListView.tableView.rx.items(cellIdentifier: "ActivityCellIdentifier", cellType: ActivityCellView.self)) { (_, item, cell) in
             cell.setup(with: item)
         }.disposed(by: disposeBag)
         
