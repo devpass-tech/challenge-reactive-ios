@@ -12,7 +12,10 @@ protocol ContactCellViewProtocol {
 }
 
 final class ContactCellView: UITableViewCell {
-
+    static var identifier: String {
+        String(describing: ContactCellView.self)
+    }
+    
    private var mainStackView: UIStackView = {
        let stack = UIStackView(frame: .zero)
        stack.translatesAutoresizingMaskIntoConstraints = false

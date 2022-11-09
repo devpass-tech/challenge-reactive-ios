@@ -10,15 +10,16 @@ import Foundation
 protocol ContactListViewModelProtocol {
     var contactsCount: Int { get }
     func contacts(at indexPath: IndexPath) -> Contact
+    func fetchContacts()
 }
 
 final class ContactListViewModel {
-    private let contactsList: [Contact] = [
-        Contact(name: "Gabriela S", phone: "(11) 99888-8888"),
-        Contact(name: "Matheus R", phone: "(11) 99888-7777"),
-        Contact(name: "Rodrigo B", phone: "(11) 99888-5555")
-    ]
-    
+    private let service: FinanceService
+    private var contactsList = [Contact]()
+
+    init(service: FinanceService) {
+        self.service = service
+    }
 }
  
 extension ContactListViewModel: ContactListViewModelProtocol {
@@ -27,6 +28,17 @@ extension ContactListViewModel: ContactListViewModelProtocol {
     }
     
     func contacts(at indexPath: IndexPath) -> Contact {
-        contactsList[indexPath.row]
+        return contactsList[indexPath.row]
+    }
+    
+    func fetchContacts() {
+        service.fetchContactList { [weak self] contact in
+            switch contact {
+            case .some(let contact):
+                self?.contactsList = contact
+            default:
+                break
+            }
+        }
     }
 }
