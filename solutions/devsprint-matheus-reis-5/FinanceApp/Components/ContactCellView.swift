@@ -7,8 +7,15 @@
 
 import UIKit
 
-class ContactCellView: UITableViewCell {
+protocol ContactCellViewProtocol {
+    func setupCell(with model: Contact)
+}
 
+final class ContactCellView: UITableViewCell {
+    static var identifier: String {
+        String(describing: ContactCellView.self)
+    }
+    
    private var mainStackView: UIStackView = {
        let stack = UIStackView(frame: .zero)
        stack.translatesAutoresizingMaskIntoConstraints = false
@@ -38,7 +45,6 @@ class ContactCellView: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.boldSystemFont(ofSize: 17)
-        label.text = "Contact Name"
         return label
     }()
 
@@ -47,7 +53,6 @@ class ContactCellView: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .gray
         label.font = UIFont.systemFont(ofSize: 14)
-        label.text = "(11) 99999-9999"
         return label
     }()
 
@@ -91,3 +96,9 @@ extension ContactCellView {
     }
 }
 
+extension ContactCellView: ContactCellViewProtocol {
+    func setupCell(with model: Contact) {
+        contactPhoneLabel.text = model.name
+        contactNameLabel.text = model.phone
+    }
+}
