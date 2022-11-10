@@ -36,7 +36,6 @@ class HomeView: UIView {
 
         let activityListView = ActivityListView()
         activityListView.translatesAutoresizingMaskIntoConstraints = false
-        activityListView.delegate = self
         return activityListView
     }()
 
@@ -51,7 +50,7 @@ class HomeView: UIView {
         stackView.setCustomSpacing(32, after: homeHeaderView)
         addSubview(stackView)
 
-        let estimatedHeight = CGFloat(activityListView.tableView.numberOfRows(inSection: 0))*ActivityListView.cellSize
+        let estimatedHeight = 10 * ActivityListView.cellSize
 
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
@@ -64,13 +63,5 @@ class HomeView: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension HomeView: ActivityListViewDelegate {
-
-    func didSelectedActivity() {
-
-        delegate?.didSelectActivity()
     }
 }
