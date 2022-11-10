@@ -40,7 +40,6 @@ class ActivityDetailsView: UIView {
     let activityNameLabel: UILabel = {
 
         let label = UILabel()
-        label.text = ""
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 17)
         return label
@@ -49,7 +48,6 @@ class ActivityDetailsView: UIView {
     let categoryLabel: UILabel = {
 
         let label = UILabel()
-        label.text = ""
         label.textAlignment = .center
         return label
     }()
@@ -64,7 +62,6 @@ class ActivityDetailsView: UIView {
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = ""
         label.font = UIFont.boldSystemFont(ofSize: 34)
         return label
     }()
@@ -73,7 +70,6 @@ class ActivityDetailsView: UIView {
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = ""
         return label
     }()
 

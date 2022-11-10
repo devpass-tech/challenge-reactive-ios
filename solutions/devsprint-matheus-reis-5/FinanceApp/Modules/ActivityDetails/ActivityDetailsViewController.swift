@@ -23,19 +23,19 @@ class ActivityDetailsViewController: UIViewController {
         self.view = activityDetailsView
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidLoad() {
+        super.viewDidLoad()
         viewModelBinds()
         viewModel.fetchActivityDetails()
     }
 
     private func viewModelBinds() {
-        viewModel.activityDetails.bind { [weak self] activityDetails in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
+        viewModel.activityDetails
+            .asDriver(onErrorJustReturn: ActivityDetails(name: "Error", price: 0.0, category: "", time: ""))
+            .drive { [weak self] activityDetails in
+                guard let self = self else { return }
                 self.activityDetailsView.configure(activityDetails)
-            }
-        }.disposed(by: disposeBag)
+            }.disposed(by: disposeBag)
     }
 }
 
