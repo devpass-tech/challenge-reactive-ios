@@ -22,7 +22,7 @@ class HomeViewController: UIViewController {
     private var disposeBag = DisposeBag()
     
     // MARK: - Initializers
-    init(withService service: FinanceService = FinanceService()) {
+    init(service: FinanceService = FinanceService()) {
         self.service = service
         super.init(nibName: nil, bundle: nil)
     }
@@ -69,8 +69,6 @@ class HomeViewController: UIViewController {
             
             let itemSelected = self.activitiesObervable.value[indexPath.row]
             self.goToDetails(itemSelected)
-            
-            
         }.disposed(by: disposeBag)
     }
     
