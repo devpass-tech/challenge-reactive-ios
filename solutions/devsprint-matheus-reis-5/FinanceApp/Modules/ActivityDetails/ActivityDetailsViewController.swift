@@ -5,19 +5,20 @@
 //  Created by Rodrigo Borges on 30/12/21.
 //
 
+import RxCocoa
+import RxSwift
 import UIKit
 import RxSwift
 
 class ActivityDetailsViewController: UIViewController {
-
+    private let disposeBag = DisposeBag()
+    private let viewModel: ActivityDetailsViewModel = DefaultActivityDetailsViewModel()
+    private var itemSelected: Activity
     lazy var activityDetailsView: ActivityDetailsView = {
 
         let activityDetailsView = ActivityDetailsView()
         return activityDetailsView
     }()
-    
-    private var itemSelected: Activity
-    private var disposeBag = DisposeBag()
 
     override func loadView() {
         self.view = activityDetailsView
@@ -26,6 +27,8 @@ class ActivityDetailsViewController: UIViewController {
     override func viewDidLoad() {
         activityDetailsView.configureUI(data: itemSelected)
         setupRx()
+        viewModelBinds()
+        viewModel.fetchActivityDetails()
     }
     
     // MARK: - Initializers
@@ -36,6 +39,15 @@ class ActivityDetailsViewController: UIViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    private func viewModelBinds() {
+        viewModel.activityDetails
+            .asDriver(onErrorJustReturn: ActivityDetails(name: "Error", price: 0.0, category: "", time: ""))
+            .drive { [weak self] activityDetails in
+                guard let self = self else { return }
+                self.activityDetailsView.configure(activityDetails)
+            }.disposed(by: disposeBag)
     }
     
     func setupRx() {

@@ -40,7 +40,6 @@ class ActivityDetailsView: UIView {
     let activityNameLabel: UILabel = {
 
         let label = UILabel()
-        label.text = "Mall"
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 17)
         return label
@@ -49,7 +48,6 @@ class ActivityDetailsView: UIView {
     let categoryLabel: UILabel = {
 
         let label = UILabel()
-        label.text = "Shopping"
         label.textAlignment = .center
         return label
     }()
@@ -64,7 +62,6 @@ class ActivityDetailsView: UIView {
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "$100"
         label.font = UIFont.boldSystemFont(ofSize: 34)
         return label
     }()
@@ -73,7 +70,6 @@ class ActivityDetailsView: UIView {
 
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "8:57 AM"
         return label
     }()
 
@@ -124,6 +120,13 @@ class ActivityDetailsView: UIView {
             reportIssueButton.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
             reportIssueButton.heightAnchor.constraint(equalToConstant: 56)
         ])
+    }
+
+    func configure(_ activityDetails: ActivityDetails) {
+        activityNameLabel.text = activityDetails.name
+        categoryLabel.text = activityDetails.category
+        priceLabel.text = String(format: "$%.2f", activityDetails.price)
+        timeLabel.text = activityDetails.time
     }
     
     required init?(coder: NSCoder) {
