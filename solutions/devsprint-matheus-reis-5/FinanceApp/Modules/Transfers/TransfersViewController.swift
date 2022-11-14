@@ -6,9 +6,13 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-class TransfersViewController: UIViewController {
-
+final class TransfersViewController: UIViewController {
+    private let disposeBag = DisposeBag()
+    private let viewModel = TransfersViewModel()
+    
     lazy var transferView: TransfersView = {
 
         let transferView = TransfersView()
@@ -18,6 +22,11 @@ class TransfersViewController: UIViewController {
 
     override func loadView() {
         self.view = transferView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bindUi()
     }
 }
 
@@ -40,8 +49,20 @@ extension TransfersViewController: TransferViewDelegate {
 }
 
 extension TransfersViewController: ContactListViewControllerDelegate {
+    func selected(contact: Contact) {
+        didSelectContact(contact)
+    }
+}
 
-    func didSelectContact() {
+private extension TransfersViewController {
+    func bindUi() {
+        viewModel.chooseButtonTittle
+            .bind(to: transferView.chooseContactButton.rx.title())
+            .disposed(by: disposeBag)
+    }
+    
+    func didSelectContact(_ contact: Contact) {
+        viewModel.selectedContact(contact)
 
         self.dismiss(animated: true)
 
